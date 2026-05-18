@@ -43,7 +43,7 @@ $$
 $$
 
 ```python
-for i in range(9):
+for i in range(10):
   model.Add(sum([x[i,j] for j in range(4)]) <= 2)
 ```
 
@@ -56,7 +56,7 @@ $$
 ```python
 for i in range(9):
   for j in range(4):
-    modle.AddImplication(x_{i, j},not x_{i + 1, j})
+    model.AddImplication(x[i, j],x[i + 1, j].Not())
 ```
 
 - ต้องมีตัวโน้ตอย่างน้อย 1 ตัวเสมอในทุกๆ 3 จังหวะติดกัน
@@ -67,8 +67,7 @@ $$
 
 ```python
 for i in range(8):
-  for j in range(4):
-    model.Add(x[i, j] + x[i+1, j] + x[i+2, j] >= 1))
+  model.Add(sum([x[t, j] for t in range(i, i+3) for j in range(4)]) >= 1)
 ```
 
 **Step 4:  create objective**
@@ -91,7 +90,16 @@ status = solver.Solve(model)
 
 if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
     for i in range(10):
-      print("_"*(not solver.BooleanValue(x[i,j])) +  "O"*(not solver.BooleanValue(x[i,j])) for j in range(4))
+      # เก็บตัวอักษรของแต่ละเลนในจังหวะที่ i
+      row_display = []
+      for j in range(4):
+        if solver.BooleanValue(x[i,j]):
+          row_display.append("O") # ใส่โน้ต
+        else:
+          row_display.append("_") # เลนว่าง
+      
+      # ปริ้นท์ทั้ง 4 เลน ติดกัน (เช่น _ O O _)
+      print(" ".join(row_display))
 else:
     print('This model dont have a feasible result')
 ```
