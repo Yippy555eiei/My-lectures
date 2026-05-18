@@ -1,3 +1,5 @@
+# Basic to CP-SAT Solver
+
 CP-SAT Solver เป็นเครื่องมือที่ใช้ในการแก้ปัญหา Optimization และ การหาความเป็นไปได้ โดยใช้ Constraints Programming (การแจกแจงปัญหาเป็นเงื่อนไข) กับตัวแปรที่เป็น Integer, Boolean, Interval
 
 **วิธีการใช้ CP-SAT Solver กับ python**
@@ -9,21 +11,22 @@ model = cp_model.CpModel()
 ```
 
 - **การกำหนดตัวแปร** ที่นิยม้กันมีดังนี้
-  - Integer Variable สามารถกำหนดขอบเขตของค่าที่เป็นไปได้ได้
+
+Integer Variable สามารถกำหนดขอบเขตของค่าที่เป็นไปได้ได้
 
 ```python
 # สร้างตัวแปรใน model ชื่อ name โดยมีค่าที่เป็นไปได้คือ -100 ถึง 100 และสามารถเรียกตัวแปรดังกล่าไปสร้างเงื่อนไขอื่นได้โดยเรียก var
 var = model.NewIntVar(-100,100,'name')
 ```
 
-  - Boolean Variable
+Boolean Variable
 
 ```python
 # สร้างตัวแปรใน model ชื่อ name โดยมีค่าที่เป็นไปได้คือ True ถึง False และสามารถเรียกตัวแปรดังกล่าไปสร้างเงื่อนไขอื่นได้โดยเรียก var
 var = model.NewBoolVar('name')
 ```
 
-  - Interval Variable เป็นตัวแปรที่จะล็อกความยาวช่วงได้
+Interval Variable เป็นตัวแปรที่จะล็อกความยาวช่วงได้
 
 ```python
 # สร้างจุดเริ่มและจุดสิ้นสุดของเวลา
@@ -31,10 +34,10 @@ start = model.NewIntVar(0, 24, 'start')
 end = model.NewIntVar(0, 24, 'end')
 
 # สร้าง Interval ผูก start และ end เข้าด้วยกันด้วยระยะเวลา 5
-var = model.NewIntervalVar(start_time, 5, end_time, 'job_1')
+var = model.NewIntervalVar(start, 5, end, 'name')
 ```
 
-  - Optional Interval Variable เป็น Interval Variable + Boolaan (เลือกทำหรือไม่ก็ได้)
+Optional Interval Variable เป็น Interval Variable + Boolaan (เลือกทำหรือไม่ก็ได้)
 
 ```python
 # ถ้า is_performed = 0 (ไม่ทำ) ตัวแปร Interval นี้จะล่องหนไปเลย ไม่เอามาคิดกติกาชนกัน
@@ -42,7 +45,8 @@ var = model.NewOptionalIntervalVar(start, duration, end, is_performed, 'opt_job'
 ```
 
 - **การกำหนดเงื่อนไข**
-  - Linear Constraints
+
+Linear Constraints
 
 ```python
 # ผลรวมของ x และ y ต้องไม่เกิน 10
@@ -55,7 +59,7 @@ model.Add(x != y)
 model.AddLinearConstraint(x, 5, 10)
 ```
 
-  - Global Constraints
+Global Constraints
 
 ```python
 # 1. AllDifferent: ทุกตัวแปรในลิสต์นี้ "ห้ามมีค่าซ้ำกันเลย" (เหมาะกับ Sudoku, จัดตารางเวร)
@@ -69,7 +73,7 @@ model.AddNoOverlap([job1_interval, job2_interval, job3_interval])
 model.AddMaxEquality(max_val, [x, y, z])
 ```
 
-  - Logical Constraints
+Logical Constraints
 
 ```python
 # 1. Implication (ถ้า A เป็นจริง แล้ว B ต้องเป็นจริงด้วย)
@@ -84,7 +88,7 @@ model.AddBoolOr([is_a_night, is_b_night, is_c_night])
 model.AddBoolXOr([is_a_manager, is_b_manager])
 ```
 
-  - OnlyEnforceIf
+OnlyEnforceIf
 
 ```python
 b = model.NewBoolVar('b') # สมมติ b คือ "กดปุ่มเปิดเครื่อง"
@@ -102,9 +106,9 @@ model.Add(production == 0).OnlyEnforceIf(b.Not())
 # หาคำตอบที่เป็นไปได้
 solver.Solve(model)
 # หาค่า minimize
-model.minimize(x)
+model.Minimize(x)
 # หาค่า maximize
-model.maximize(x)
+model.Maximize(x)
 ```
 
 - **การแสดงคำตอบ**
@@ -113,7 +117,8 @@ model.maximize(x)
     - `cp_model.FEASIBLE`: เจอคำตอบที่ถูกกฎ แต่ยังไม่รับประกันว่าดีที่สุด (มักจะเกิดตอนเราตั้งเวลาจำกัด Time Limit ไว้แล้วมันหมดเวลาก่อน)
     - `cp_model.INFEASIBLE`: กฎขัดแย้งกันเอง ไม่มีทางเป็นไปได้ในจักรวาลนี้ (UNSAT)
   - Value ของคำตอบ
-  หาคำตอบเดียว
+
+หาคำตอบเดียว
 
 ```python
 # จะได้ตัวเลขผลกำไรสูงสุด หรือ เวลาที่น้อยที่สุดออกมา
@@ -130,7 +135,7 @@ if solver.BooleanValue(machine_on):
     print("เครื่องจักรทำงานอยู่")
 ```
 
-  หาความเป็นไปได้ทุกคำตอบ
+หาความเป็นไปได้ทุกคำตอบ
 
 ```python
 class SolutionPrinter(cp_model.CpSolverSolutionCallback):
