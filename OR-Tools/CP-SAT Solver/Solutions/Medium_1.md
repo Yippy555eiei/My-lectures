@@ -90,15 +90,12 @@ status = solver.Solve(model)
 
 if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
     for i in range(10):
-      # เก็บตัวอักษรของแต่ละเลนในจังหวะที่ i
       row_display = []
       for j in range(4):
         if solver.BooleanValue(x[i,j]):
-          row_display.append("O") # ใส่โน้ต
+          row_display.append("O")
         else:
-          row_display.append("_") # เลนว่าง
-      
-      # ปริ้นท์ทั้ง 4 เลน ติดกัน (เช่น _ O O _)
+          row_display.append("_")
       print(" ".join(row_display))
 else:
     print('This model dont have a feasible result')
