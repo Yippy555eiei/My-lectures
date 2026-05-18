@@ -1,4 +1,5 @@
 CP-SAT Solver เป็นเครื่องมือที่ใช้ในการแก้ปัญหา Optimization และ การหาความเป็นไปได้ โดยใช้ Constraints Programming (การแจกแจงปัญหาเป็นเงื่อนไข) กับตัวแปรที่เป็น Integer, Boolean, Interval
+
 **วิธีการใช้ CP-SAT Solver กับ python**
 - **เลือกเครื่องมือที่ต้องการ** ในหัวข้อนี้เราเลือก CP-SAT Solver
 
@@ -50,7 +51,7 @@ model.Add(x + y <= 10)
 # x ต้องไม่เท่ากับ y
 model.Add(x != y)
 
-# สามารถเขียนแบบช่วง (Range) ได้เลย! (x อยู่ระหว่าง 5 ถึง 10)
+# สามารถเขียนแบบช่วง (Range) ได้เลย (x อยู่ระหว่าง 5 ถึง 10)
 model.AddLinearConstraint(x, 5, 10)
 ```
 
