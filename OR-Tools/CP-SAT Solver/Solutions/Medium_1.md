@@ -62,7 +62,7 @@ for i in range(9):
 - ต้องมีตัวโน้ตอย่างน้อย 1 ตัวเสมอในทุกๆ 3 จังหวะติดกัน
 
 $$
-\forall 1 \leq i \leq 8,\forall j\left( x_{i,j} \vee x_{i + 1,j} \vee x_{i + 2, j}  \right)
+\forall i \leq 8, \sum_j (x_{i,j} + x_{i+1,j} + x_{i+2,j}) \geq 1
 $$
 
 ```python
