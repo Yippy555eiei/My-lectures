@@ -15,7 +15,7 @@
 **Step 1: import tools and create model**
 
 ```python
-form ortools.sat.python import cp_model
+from ortools.sat.python import cp_model
 model = cp_model.CpModel()
 ```
 
@@ -54,7 +54,7 @@ $$
 $$
 
 ```python
-model.Maximize(12050a[0] + 34075a[1] + 8500a[2] + 21025a[3] + 45050a[4])
+model.Maximize(12050 * a[0] + 34075 * a[1] + 8500 * a[2] + 21025 * a[3] + 45050 * a[4])
 ```
 
 **Step 5: solve and print results**
@@ -63,11 +63,11 @@ model.Maximize(12050a[0] + 34075a[1] + 8500a[2] + 21025a[3] + 45050a[4])
 solver = cp_model.CpSolver()
 status = solver.Solve(model)
 
-if status == cp_model.OPTIMAL or cp_model.FEASIBLE:
-  print(solver.ObjetiveValue())
-  name = ['A','B','C','D','E']
+if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
+  print(f"Profit: {solver.ObjectiveValue() / 100} บาท")
+  name = ['A', 'B', 'C', 'D', 'E']
   for i in range(5):
-    if solver.BoolValue(a[i]):
+    if solver.BooleanValue(a[i]):
       print(name[i])
 else:
   print("This problem has no feasible answer")
